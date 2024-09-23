@@ -974,7 +974,9 @@ app.get("/Adminproduct", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
+app.get('/',(req,res)=>{
+  res.send('Server is running on port 3010')
+})
 app.get("/AdminBlog", async (req, res) => {
   try {
     const { search } = req.query;

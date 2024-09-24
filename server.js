@@ -469,6 +469,29 @@ app.get("/collection/ActiveStatus", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+app.get("/collect/products/active", async (req, res) => {
+  try {
+      // Step 1: Get the active collections
+      const newCollection = await Collection.find({ status: "active" });
+
+      // Step 2: Extract categories from the newCollection
+      const categories = newCollection.map(item => item.category).flat();
+
+      // Step 3: Find products that match the extracted categories
+      const activeProducts = await Product.find({
+          category: { $in: categories }
+      });
+
+      console.log(activeProducts, "here active products");
+      
+      // Step 4: Send the active products as response
+      res.json(activeProducts);
+  } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/activeproduct", async (req, res) => {
   try {
     const newProduct = await Product.find({})

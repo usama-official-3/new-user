@@ -336,14 +336,16 @@ app.delete("/deleteUser", async function (req, res) {
 app.post("/add-video", async function (req, res) {
   console.log("first video");
   console.log(req.body.url);
-  console.log(req.body.user);
+  console.log(req.body.user); 
 
   try {
+    
     const video = new Video({
-      url: req.body.url,
-      user: req.body.user ? req.body.user : null,
+      url: req.body.url, 
+      user: req.body.user ? req.body.user : null, 
     });
 
+    
     await video.save();
 
     res.send({ message: "Video Added", video });
@@ -359,7 +361,7 @@ app.get("/getVideo/:user", async function (req, res) {
   try {
     const user = req.params.user;
 
-    const video = await Video.findOne({ user: user });
+    const video = await Video.find({ user: user });
 
     if (video) {
       res.status(200).json(video);
@@ -447,7 +449,26 @@ app.get("/product", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+app.get("/Product/byCategory/:category", async (req, res) => {
 
+  try {
+    const newCollection = await Product.find({ category: req.params.category });
+    res.json(newCollection);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+app.get("/collection/ActiveStatus", async (req, res) => {
+  console.log("running")
+  try {
+    const newCollection = await Collection.find({ status: "active" });
+    res.json(newCollection);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 app.get("/activeproduct", async (req, res) => {
   try {
     const newProduct = await Product.find({})
@@ -497,16 +518,6 @@ app.get("/product_edit", async function (req, res) {
     res.json(product);
   } catch (e) {
     res.status(500).json(e);
-  }
-});
-
-app.get("/Product/byCategory/:category", async (req, res) => {
-  try {
-    const newCollection = await Product.find({ category: req.params.category });
-    res.json(newCollection);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -834,7 +845,7 @@ app.post("/collection", async (req, res) => {
     await newCollection.save();
     res.send({ message: "Collection Added" });
   } catch (e) {
-    console.log("E:", e);
+    console.log("E:",e);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -849,15 +860,6 @@ app.get("/collection", async (req, res) => {
   }
 });
 
-app.get("/collection/ActiveStatus", async (req, res) => {
-  try {
-    const newCollection = await Collection.find({ status: "active" });
-    res.json(newCollection);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 app.delete("/deleteCollection", async function (req, res) {
   try {

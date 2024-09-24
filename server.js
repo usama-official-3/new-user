@@ -19,8 +19,8 @@ app.use(myExpress.json());
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-   user: 'ra0511083@gmail.com',
-    pass: 'qauk brdr ehmr twox'
+    user: "ra0511083@gmail.com",
+    pass: "qauk brdr ehmr twox",
   },
 });
 
@@ -63,7 +63,7 @@ const { error } = require("console");
 //signup
 
 app.post("/signUp", async (req, res) => {
-  console.log('Welcome');
+  console.log("Welcome");
   try {
     const existingUser = await SignupUsers.findOne({ email: req.body.email });
 
@@ -121,18 +121,16 @@ app.post("/signUp", async (req, res) => {
   }
 });
 
-
-
 //verify email
 app.post("/verify-email", async (req, res) => {
-  console.log('first')
+  console.log("first");
   try {
     const { email, otp } = req.body;
-console.log(email,otp , "email")
+    console.log(email, otp, "email");
     const user = await SignupUsers.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({message:"User not found"});
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (user.otp === otp && user.otpExpires > Date.now()) {
@@ -141,7 +139,7 @@ console.log(email,otp , "email")
       user.otpExpires = null;
       await user.save();
 
-      res.status(200).json({message:"Email verified successfully"});
+      res.status(200).json({ message: "Email verified successfully" });
     } else {
       res.status(400).send("Invalid or expired OTP");
     }
@@ -152,12 +150,12 @@ console.log(email,otp , "email")
 
 //forgot password
 app.post("/forgot-password", async (req, res) => {
-  console.log('first')
+  console.log("first");
   const { email } = req.body;
 
   try {
     const user = await SignupUsers.findOne({ email });
-    console.log(user)
+    console.log(user);
     if (!user) {
       return res.status(404).send("No user with that email");
     }
@@ -320,9 +318,7 @@ app.get("/Users", async (req, res) => {
   try {
     const newUser = await SignupUsers.find().sort({ _id: -1 });
     res.json(newUser);
-  } catch (e) {
-
-  }
+  } catch (e) {}
 });
 
 app.delete("/deleteUser", async function (req, res) {
@@ -338,18 +334,18 @@ app.delete("/deleteUser", async function (req, res) {
 // Add Video
 
 app.post("/add-video", async function (req, res) {
-  console.log('first video');
+  console.log("first video");
   console.log(req.body.url);
-  console.log(req.body.user); // Log the userId to check
+  console.log(req.body.user); 
 
   try {
-    // Create a new video object with url and userId
+    
     const video = new Video({
-      url: req.body.url,    // Video URL
-      user: req.body.user ? req.body.user : null,  // If user exists, assign it; otherwise, null
+      url: req.body.url, 
+      user: req.body.user ? req.body.user : null, 
     });
 
-    // Save the video to the database
+    
     await video.save();
 
     res.send({ message: "Video Added", video });
@@ -359,7 +355,25 @@ app.post("/add-video", async function (req, res) {
   }
 });
 
+//get video by user
 
+app.get("/getVideo/:user", async function (req, res) {
+  try {
+    const user = req.params.user;
+
+    const video = await Video.findOne({ user: user });
+
+    if (video) {
+      res.status(200).json(video);
+      console.log("user:", video);
+    } else {
+      res.status(404).json({ message: "Video not found for the user" });
+    }
+  } catch (error) {
+    console.log("Err:", error);
+    res.status(500).json({ message: "Error retrieving video", error });
+  }
+});
 
 // Products data
 
@@ -812,6 +826,7 @@ app.post("/collection", async (req, res) => {
     await newCollection.save();
     res.send({ message: "Collection Added" });
   } catch (e) {
+    console.log("E:",e);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -974,9 +989,9 @@ app.get("/Adminproduct", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-app.get('/',(req,res)=>{
-  res.send('Server is running on port 3010')
-})
+app.get("/", (req, res) => {
+  res.send("Server is running on port 3010");
+});
 app.get("/AdminBlog", async (req, res) => {
   try {
     const { search } = req.query;

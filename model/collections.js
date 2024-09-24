@@ -2,7 +2,7 @@ let mongoose = require("mongoose");
 
 let collectionSchema = mongoose.Schema({
     category: String,
-    subCategory: [{ name: String }], // Subcategories as an array of objects
+    subCategory: [{ name: String}], // Subcategories as an array of objects
     image: String,
     status: {
         type: String,

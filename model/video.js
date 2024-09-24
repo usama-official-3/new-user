@@ -2,7 +2,7 @@ let mongoose = require("mongoose");
 
 let videoSchema = mongoose.Schema({
   url: String,
-  user: String, // Reference to user
+  user: String, 
 });
 
 let Video = mongoose.model("Video", videoSchema);
